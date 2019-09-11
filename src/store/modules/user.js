@@ -1,6 +1,6 @@
 import user from '@/api/user'
 // import { login, logout, getInfo, queryList } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setAdmin, removeAdmin, getAdmin } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -34,10 +34,13 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      user.login({ username: username.trim(), password: password }).then(response => {
+      user.login({ userName: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        // commit('SET_ROLES', [data.role])
         setToken(data.token)
+        setAdmin(data.role.toString())
+        // setToken([data.role])
         resolve()
       }).catch(error => {
         reject(error)
@@ -50,11 +53,16 @@ const actions = {
     // 获取用户信息和权限
     // roles 不可缺少
     return new Promise((resolve, reject) => {
+      const rolesArr = []
+      if (getAdmin()) {
+        rolesArr.push(getAdmin())
+        commit('SET_ROLES', rolesArr || 'admin')
+      }
       const data = {
-        roles: ['admin'],
-        introduction: 'I am a super administrator',
+        roles: state.roles || rolesArr,
+        introduction: 'admin',
         avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        name: 'QY'
+        name: state.roles.toString()
       }
       const { roles, name, avatar, introduction } = data
       commit('SET_ROLES', roles)
@@ -62,30 +70,6 @@ const actions = {
       commit('SET_AVATAR', avatar)
       commit('SET_INTRODUCTION', introduction)
       resolve(data)
-
-      // getInfo(state.token).then(response => {
-      //   const { data } = response
-      //   console.log('getInfo')
-      //   console.log(data)
-      //   if (!data) {
-      //     reject('Verification failed, please Login again.')
-      //   }
-      //
-      //   const { roles, name, avatar, introduction } = data
-      //
-      //   // roles must be a non-empty array
-      //   if (!roles || roles.length <= 0) {
-      //     reject('getInfo: roles must be a non-null array!')
-      //   }
-      //
-      //   commit('SET_ROLES', roles)
-      //   commit('SET_NAME', name)
-      //   commit('SET_AVATAR', avatar)
-      //   commit('SET_INTRODUCTION', introduction)
-      //   resolve(data)
-      // }).catch(error => {
-      //   reject(error)
-      // })
     })
   },
 
@@ -96,6 +80,7 @@ const actions = {
       commit('SET_ROLES', [])
       removeToken()
       resetRouter()
+      removeAdmin()
       resolve()
       // user.logout(state.token).then(() => {
       //   commit('SET_TOKEN', '')
@@ -157,7 +142,6 @@ const actions = {
   adminLogin({ commit }, data) {
     commit('SET_TOKEN', data.token)
     setToken(data.token)
-    // console.log(state.token)
     return new Promise((resolve, reject) => {
       resolve()
     })

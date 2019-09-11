@@ -96,6 +96,7 @@
 </template>
 <script>
 import Pagination from '@/components/Pagination'
+import axios from 'axios'
 const rulesNumber = (rule, value, callback) => {
   if (value === '' || !(/^\d||\d.+$/.test(value))) {
     callback(new Error('请输入正确的数值'))
@@ -451,12 +452,21 @@ export default {
       this.selfMessage({ msg: message, type: 'warning' })
     },
     excelModelExport() {
-      var a = document.createElement('a')
-      a.setAttribute('href', process.env.VUE_APP_BASE_API + '/stockInfo/excelModelExport')
-      a.setAttribute('target', '_blank')
-      a.setAttribute('id', 'camnpr')
-      document.body.appendChild(a)
-      a.click()
+      axios({
+        url: process.env.VUE_APP_BASE_API + '/stockInfo/excelModelExport',
+        method: 'get',
+        headers: {
+          'token': this.$store.state.user.token
+        }
+      })
+        .then(res => {
+          var a = document.createElement('a')
+          a.setAttribute('href', process.env.VUE_APP_BASE_API + '/stockInfo/excelModelExport')
+          a.setAttribute('target', '_blank')
+          a.setAttribute('id', 'camnpr')
+          document.body.appendChild(a)
+          a.click()
+        })
     }
   }
 }

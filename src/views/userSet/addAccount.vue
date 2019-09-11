@@ -1,11 +1,11 @@
 <template>
-  <div class="dashboard-container userSet user-psd">
+  <div class="dashboard-container userSet user-password">
     <el-form ref="form" :model="form" label-width="80px" :rules="rules">
-      <el-form-item label="账号" prop="old">
-        <el-input v-model="form.account"></el-input>
+      <el-form-item label="账号" prop="userName">
+        <el-input v-model="form.userName" />
       </el-form-item>
-      <el-form-item label="密码" prop="new">
-        <el-input v-model="form.psd"></el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="form.password" type="password" />
       </el-form-item>
       <el-button type="primary" @click="onSubmit('form')">创建</el-button>
     </el-form>
@@ -18,12 +18,12 @@ export default {
   data() {
     return {
       form: {
-        account: '',
-        psd: ''
+        userName: '',
+        password: ''
       },
       rules: {
-        old: [{ required: true, message: '请输入正确的信息' }],
-        new: [{ required: true, message: '请输入正确的信息' }]
+        userName: [{ required: true, message: '请输入正确的账号' }],
+        password: [{ required: true, message: '请输入正确的密码' }]
       }
     }
   },
@@ -31,7 +31,13 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) return false
-        this.$store.dispatch('user/userPost', { url: '', data: { url: '', data: this.form }})
+        this.$store.dispatch('user/userPost', { url: 'user/add', data: this.form })
+          .then(res => {
+            this.$message.success(res.msg)
+            this.form.userName = ''
+            this.form.password = ''
+            this.$refs[formName].resetFields()
+          })
       })
     }
   }
@@ -39,7 +45,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .user-psd{
+  .user-password{
     .el-form{
       width: 300px;
     }

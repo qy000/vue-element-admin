@@ -210,23 +210,6 @@ export default {
       a.setAttribute('id', 'camnpr')
       document.body.appendChild(a)
       a.click()
-      // axios({
-      //   url: process.env.VUE_APP_BASE_API + '/subscription/excelExport',
-      //   method: 'get',
-      //   params: { startTime: this.listQuery.startTime, endTime: this.listQuery.endTime }
-      // }).then(res => {
-      //   console.log(res)
-      //   const blob = new Blob([res.data], { type: 'application/ms-excel' })
-      //   const downloadElement = document.createElement('a')
-      //   const href = window.URL.createObjectURL(blob) // 创建下载的链接
-      //   downloadElement.href = href
-      //   // downloadElement.download = `${this.listQuery.startTime} 到 ${this.listQuery.endTime}` + '申购列表.xls' // 下载后文件名
-      //   downloadElement.download = '申购列表.xlsx' // 下载后文件名
-      //   document.body.appendChild(downloadElement)
-      //   downloadElement.click() // 点击下载
-      //   document.body.removeChild(downloadElement) // 下载完成移除元素
-      //   window.URL.revokeObjectURL(href) // 释放掉blob对象
-      // })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

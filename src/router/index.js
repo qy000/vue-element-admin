@@ -55,13 +55,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  }
-]
-export const asyncRoutes = [
-  {
     path: '/buyStock',
     component: Layout,
     redirect: '/buyStock/index',
@@ -80,6 +73,13 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  }
+]
+export const asyncRoutes = [
+  {
     path: '/userSet',
     component: Layout,
     // redirect: '/userSet/index',
@@ -90,6 +90,12 @@ export const asyncRoutes = [
     alwaysShow: true,
     children: [
       {
+        path: 'chiidAccount',
+        name: 'chiidAccount',
+        component: () => import('@/views/userSet/chiidAccount'),
+        meta: { title: '子用户', roles: ['admin'] }
+      },
+      {
         path: 'padSet',
         name: 'padSet',
         component: () => import('@/views/userSet/index'),
@@ -99,7 +105,7 @@ export const asyncRoutes = [
         path: 'addAccount',
         name: 'addAccount',
         component: () => import('@/views/userSet/addAccount'),
-        meta: { title: '添加账号' }
+        meta: { title: '添加账号', roles: ['admin'] }
       }
     ]
   },
